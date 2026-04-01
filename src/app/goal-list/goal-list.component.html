@@ -1,0 +1,84 @@
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Employee Goals ({{ goals.length }} records)</h4>
+  <div class="d-flex align-items-center gap-2">
+    <span class="badge bg-dark">Last render: {{ renderMs }} ms</span>
+    <!-- Click during a Performance recording to trigger re-render -->
+    <button class="btn btn-sm btn-warning" (click)="reloadGoals()">
+      🔄 Reload Goals (trigger re-render)
+    </button>
+  </div>
+</div>
+
+<div *ngIf="goals.length === 0" class="text-center py-5">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-2 text-muted">Loading 2000 goals…</p>
+</div>
+
+<!-- BUGGY code : *ngFor with NO trackBy -->
+<div *ngIf="isBuggy && goals.length > 0">
+  <table class="table table-sm table-hover table-bordered align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Employee</th>
+        <th>Goal</th>
+        <th>Priority</th>
+        <th>Progress</th>
+        <th>Due Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- ⚠️ BUG: no trackBy — Angular recreates ALL 210 rows on every cycle -->
+      <!-- buggy-row CSS class plays a flash animation on DOM insertion -->
+      <!-- Without trackBy every row is destroyed+inserted → all 210 flash -->
+      <tr *ngFor="let goal of goals" class="buggy-row">
+        <td>{{ goal.id }}</td>
+        <td>{{ goal.employeeName }}</td>
+        <td>{{ goal.goalTitle }}</td>
+        <td><span class="badge {{ getPriorityBadge(goal.priority) }}">{{ goal.priority }}</span></td>
+        <td style="min-width: 120px;">
+          <div class="progress" style="height: 10px;">
+            <div class="progress-bar {{ getProgressColour(goal.progress) }}"
+                 [style.width.%]="goal.progress"></div>
+          </div>
+          <small>{{ goal.progress }}%</small>
+        </td>
+        <td>{{ goal.dueDate }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- FIXED code: *ngFor WITH composite trackBy -->
+<div *ngIf="!isBuggy && goals.length > 0">
+  <table class="table table-sm table-hover table-bordered align-middle">
+    <thead class="table-success">
+      <tr>
+        <th>#</th>
+        <th>Employee</th>
+        <th>Goal</th>
+        <th>Priority</th>
+        <th>Progress</th>
+        <th>Due Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- used trackByCompositeKey t-->
+      <tr *ngFor="let goal of goals; trackBy: trackByCompositeKey">
+        <td>{{ goal.id }}</td>
+        <td>{{ goal.employeeName }}</td>
+        <td>{{ goal.goalTitle }}</td>
+        <td><span class="badge {{ getPriorityBadge(goal.priority) }}">{{ goal.priority }}</span></td>
+        <td style="min-width: 120px;">
+          <div class="progress" style="height: 10px;">
+            <div class="progress-bar {{ getProgressColour(goal.progress) }}"
+                 [style.width.%]="goal.progress"></div>
+          </div>
+          <small>{{ goal.progress }}%</small>
+        </td>
+        <td>{{ goal.dueDate }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

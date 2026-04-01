@@ -1,0 +1,16 @@
+<!-- App Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">📊 Performance Dashboard</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link" routerLink="/dashboard"     routerLinkActive="active">Dashboard (Bug 1)</a>
+      <a class="nav-link" routerLink="/goals"         routerLinkActive="active">Goal List (Bug 1 fix)</a>
+      <a class="nav-link" routerLink="/notifications" routerLinkActive="active">Notifications (Bug 2)</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container mt-4">
+  <router-outlet></router-outlet>
+</div>

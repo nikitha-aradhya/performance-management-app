@@ -1,0 +1,20 @@
+/*
+  This animation plays ONLY when a DOM element is first inserted into the page.
+
+  BUGGY mode (no trackBy):
+    Angular destroys all 210 <tr> elements and creates 210 new ones on each reload.
+    Each new <tr> is "inserted" → animation plays on ALL 210 rows → all rows flash orange.
+
+  FIXED mode (trackBy):
+    Angular REUSES existing <tr> elements — nothing is destroyed or re-inserted.
+    No new DOM insertion → animation does NOT play → rows stay white/normal.
+*/
+@keyframes row-flash {
+  0%   { background-color: #ff6b35; }   /* bright orange on creation */
+  100% { background-color: transparent; }
+}
+
+/* Applied to every <tr> in the BUGGY table */
+.buggy-row {
+  animation: row-flash 0.8s ease-out;
+}
